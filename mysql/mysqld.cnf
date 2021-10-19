@@ -1,0 +1,132 @@
+# The MySQL / Percona Server 8.0 configuration file
+#
+# All config options relevant to semi-sync and the blog post can be found AT THE BOTTOM
+# in the section titled "semi-sync".
+#
+# This config file is part of a blog post about lossless MySQL semi-sync replication and
+# automated failover. You can find the blog post here: https://datto.engineering
+
+[mysqld]
+
+### Semi-sync settings ################################################
+
+# Must be enabled on source hosts, but disabled on the replicas (otherwise you get
+# may experience odd blocking and screwed up stats; we use a custom script to manage this)
+loose-rpl_semi_sync_master_enabled              = 1
+
+# Super high timeout ensures that you don't fall back to async replication
+loose-rpl_semi_sync_master_timeout              = 3600000
+
+# Must be enabled on replicas, but disabled on the source; Make sure to let orchestrator 
+# manage this flag using EnforceExactSemiSyncReplicas=true; see blog post for discussion on this
+loose-rpl_semi_sync_slave_enabled               = 1
+
+# The wait count must match the number of semi-sync replicas or you cannot be sure which replica
+# acknowledged a transaction; see block post for discussion on this
+loose-rpl_semi_sync_master_wait_for_slave_count = 1
+
+skip-slave-start
+
+
+## General settings ###################################################
+
+server-id                          = 1234567890
+report-host                        = db-g0-1.example.com
+expire_logs_days                   = 3
+max_binlog_size                    = 512M
+max_connections                    = 4000
+max_connect_errors                 = 10000
+binlog-format                      = ROW
+sync_binlog                        = 1
+user                               = mysql
+open_files_limit                   = 1024000
+pid-file                           = /var/run/mysqld/mysqld.pid
+socket                             = /var/run/mysqld/mysqld.sock
+port                               = 3306
+bind_address                       = 0.0.0.0
+skip_name_resolve
+read_only                          = ON
+basedir                            = /usr
+datadir                            = /mysql/data/mysql/innodb
+tmpdir                             = /mysql/data/mysql/tmp
+lc-messages-dir                    = /usr/share/mysql
+log-error                          = /var/log/mysql/error.log
+log_bin                            = /mysql/logs/mysql-bin
+log_slave_updates
+relay_log                          = /mysql/logs/relay-bin
+relay_log_info_repository          = TABLE
+binlog_row_image                   = minimal
+master_info_repository             = TABLE
+sort_buffer_size                   = 8M
+join_buffer_size                   = 262144
+tmp_table_size                     = 512M
+max_heap_table_size                = 512M
+log_output                         = FILE
+slow_query_log                     = ON
+long_query_time                    = 1
+log_slow_rate_limit                = 100
+log_slow_rate_type                 = query
+log_slow_verbosity                 = full
+log_slow_admin_statements          = ON
+log_slow_slave_statements          = ON
+slow_query_log_always_write_time   = 1
+slow_query_log_use_global_control  = all
+binlog_cache_size                  = 65536
+table_open_cache                   = 30000
+table_definition_cache             = 2000
+event_scheduler                    = OFF
+key_buffer_size                    = 8M
+max_seeks_for_key                  = 1
+performance_schema                 = 1
+max_allowed_packet                 = 8M
+slave_max_allowed_packet           = 8M
+thread_stack                       = 1M
+thread_cache_size                  = 16384
+myisam_max_sort_file_size          = 32M
+myisam_sort_buffer_size            = 256M
+myisam_repair_threads              = 2
+bulk_insert_buffer_size            = 1M
+read_buffer_size                   = 8M
+read_rnd_buffer_size               = 256K
+default-authentication-plugin      = mysql_native_password
+explicit_defaults_for_timestamp    = ON
+sql_mode                           = NO_ENGINE_SUBSTITUTION
+thread_pool_size                   = 32
+gtid_mode                          = ON
+binlog_gtid_simple_recovery        = ON
+enforce_gtid_consistency
+loose-audit_log_file               = /mysql/logs/audit.log
+loose-audit_log_format             = JSON
+loose-audit_log_policy             = NONE
+loose-audit_log_rotations          = 10
+loose-audit_log_rotate_on_size     = 512M
+loose-audit_log_exclude_accounts   = pmm@localhost,datadog@localhost,root@localhost,monitor@localhost
+
+
+## InnoDB #############################################################
+
+innodb_flush_log_at_timeout        = 1
+innodb_change_buffer_max_size      = 50
+innodb_buffer_pool_size            = 1G
+innodb_buffer_pool_instances       = 8
+innodb_log_file_size               = 2G
+innodb_log_files_in_group          = 4
+innodb_log_buffer_size             = 32M
+innodb_flush_log_at_trx_commit     = 1
+innodb_read_io_threads             = 64
+innodb_write_io_threads            = 64
+innodb_sort_buffer_size            = 64M
+innodb_thread_concurrency          = 128
+innodb_log_group_home_dir          = /mysql/logs/innodb
+innodb_io_capacity                 = 3000
+innodb_io_capacity_max             = 6000
+innodb_lru_scan_depth              = 1024
+innodb_flush_neighbors             = 0
+innodb_doublewrite                 = ON
+innodb_checksum_algorithm          = crc32
+innodb_monitor_enable              = all
+innodb_strict_mode                 = ON
+innodb_print_all_deadlocks         = ON
+innodb_thread_sleep_delay          = 0
+
+

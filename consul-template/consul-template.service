@@ -1,0 +1,14 @@
+[Unit]
+Description=Consul Template config for HAproxy-MySQL
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/consul-template -config "/etc/consul-template/haproxy.hcl"
+ExecReload=/bin/kill --signal HUP $MAINPID
+ExecStop=/bin/kill --signal INT $MAINPID
+TimeoutStartSec=0
+Restart=always
+
+[Install]
+WantedBy=default.target

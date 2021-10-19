@@ -1,0 +1,20 @@
+{
+  "bootstrap_expect": 3,
+  "retry_join": ["10.40.183.102", "10.40.183.104", "10.40.183.114"],
+  "client_addr": "0.0.0.0",
+  "datacenter": "DEVM",
+  "data_dir": "/var/lib/consul",
+  "domain": "consul",
+  "enable_script_checks": true,
+  "dns_config": {
+    "enable_truncate": true,
+    "only_passing": true
+  },
+  "enable_syslog": true,
+  "encrypt": "<insert consul encrypt string>",
+  "leave_on_terminate": true,
+  "log_level": "INFO",
+  "rejoin_after_leave": true,
+  "server": true,
+  "ui": true
+}

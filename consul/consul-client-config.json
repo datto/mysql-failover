@@ -1,0 +1,11 @@
+{
+  "datacenter": "DEVM",
+  "data_dir": "/var/lib/consul",
+  "enable_syslog": true,
+  "encrypt": "<insert consul encrypt string>",
+  "leave_on_terminate": true,
+  "log_level": "INFO",
+  "rejoin_after_leave": true,
+  "server": false,
+  "retry_join": ["10.40.183.102", "10.40.183.104", "10.40.183.114"]
+}

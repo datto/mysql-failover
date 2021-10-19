@@ -1,0 +1,10 @@
+# Defaults file for HAProxy
+#
+# This overrides the default config location to be the conf.d directory.
+# HAproxy will now read all files in that folder.
+#
+# This config file is part of a blog post about lossless MySQL semi-sync replication and
+# automated failover. You can find the blog post here: https://datto.engineering
+
+CONFIG="/etc/haproxy/conf.d/"
+
